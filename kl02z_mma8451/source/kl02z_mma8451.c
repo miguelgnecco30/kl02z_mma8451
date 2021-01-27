@@ -28,6 +28,15 @@
 
 #define MMA8451_WHO_AM_I_MEMORY_ADDRESS		0x0D
 
+#define MMA8451_OUT_X_MSB   0x01
+#define MMA8451_OUT_X_LSB  0x02
+#define MMA8451_OUT_Y_MSB   0x03
+#define MMA8451_OUT_Y_LSB  0x04
+#define MMA8451_OUT_Z_MSB   0x05
+#define MMA8451_OUT_Z_LSB  0x06
+
+
+
 /*******************************************************************************
  * Private Prototypes
  ******************************************************************************/
@@ -54,7 +63,10 @@
 int main(void) {
 	status_t status;
 	uint8_t nuevo_byte_uart;
-	uint8_t	nuevo_dato_i2c;
+	uint16_t nuevo_dato_i2c;
+	uint16_t MSB;
+    uint16_t LSB;
+    uint16_t datocompleto;
 
   	/* Init board hardware. */
     BOARD_InitBootPins();
@@ -73,6 +85,9 @@ int main(void) {
     PRINTF("v-V led VERDE\r\n");
     PRINTF("a-A led AZUL\r\n");
     PRINTF("M buscar acelerometro\r\n");
+    PRINTF("x-X registro salida de X (MSB|LSB)\r\n");
+    PRINTF("y-Y Registro salida de Y (MSB|LSB)\r\n");
+    PRINTF("z-Z Registro salida de Z (MSB|LSB)\r\n");
 
 
     while(1) {
@@ -103,12 +118,53 @@ int main(void) {
 				case 'M':
 					i2c0MasterReadByte(&nuevo_dato_i2c, MMA851_I2C_DEVICE_ADDRESS, MMA8451_WHO_AM_I_MEMORY_ADDRESS);
 
-					if(nuevo_dato_i2c==0x1A)
+					if(nuevo_dato_i2c==0x1A);
 						printf("MMA8451 encontrado!!\r\n");
-					else
-						printf("MMA8451 error\r\n");
 
 					break;
+
+    			case 'x':
+    			case 'X':
+    			i2c0MasterReadByte(&MSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_MSB);
+
+    			i2c0MasterReadByte(&LSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_LSB);
+
+    				datocompleto=(MSB<<6)|(LSB>>2);
+
+					printf("el dato MSB de X es: %d \r\n ", MSB);
+					printf("el dato LSB de X es: %d \r\n ", LSB);
+    			    printf("el dato completo es: %d \r\n ", datocompleto);
+
+    						break;
+
+    			case 'y':
+    			case 'Y':
+
+    			i2c0MasterReadByte(&MSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_Y_MSB);
+
+    			i2c0MasterReadByte(&LSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_Y_LSB);
+
+    				datocompleto=(MSB<<6)|(LSB>>2);
+
+					printf("el dato MSB de Y es: %d \r\n ", MSB);
+					printf("el dato LSB de Y es: %d \r\n ", LSB);
+    			    printf("el dato completo es: %d \r\n ", datocompleto);
+
+    						break;
+    			case 'z':
+    			case 'Z':
+
+    			i2c0MasterReadByte(&MSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_Z_MSB);
+
+    			i2c0MasterReadByte(&LSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_Z_LSB);
+
+    				datocompleto=(MSB<<6)|(LSB>>2);
+
+					printf("el dato MSB de Z es: %d \r\n ", MSB);
+					printf("el dato LSB de Z es: %d \r\n ", LSB);
+    			    printf("el dato completo es: %d \r\n ", datocompleto);
+
+    						break;
 				}
     		}else{
     			printf("error\r\n");
@@ -118,3 +174,4 @@ int main(void) {
 
     return 0 ;
 }
+
