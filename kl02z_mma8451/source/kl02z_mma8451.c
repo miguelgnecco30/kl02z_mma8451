@@ -30,6 +30,9 @@
 
 #define MMA8451_OUT_X_MSB   0x01
 #define MMA8451_OUT_X_LSB  0x02
+#define MMA8451_OUT_Y_MSB   0x03
+#define MMA8451_OUT_Y_LSB  0x04
+
 
 
 /*******************************************************************************
@@ -59,8 +62,8 @@ int main(void) {
 	status_t status;
 	uint8_t nuevo_byte_uart;
 	uint16_t nuevo_dato_i2c;
-	uint16_t XMSB;
-    uint16_t XLSB;
+	uint16_t MSB;
+    uint16_t LSB;
     uint16_t datocompleto;
 
   	/* Init board hardware. */
@@ -117,14 +120,29 @@ int main(void) {
 
     			case 'x':
     			case 'X':
-    			i2c0MasterReadByte(&XMSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_MSB);
+    			i2c0MasterReadByte(&MSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_MSB);
 
-    			i2c0MasterReadByte(&XLSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_LSB);
+    			i2c0MasterReadByte(&LSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_LSB);
 
-    				datocompleto=(XMSB<<6)|(XLSB>>2);
+    				datocompleto=(MSB<<6)|(LSB>>2);
 
-					printf("el dato MSB de X es: %d \r\n ", XMSB);
-					printf("el dato LSB de X es: %d \r\n ", XLSB);
+					printf("el dato MSB de X es: %d \r\n ", MSB);
+					printf("el dato LSB de X es: %d \r\n ", LSB);
+    			    printf("el dato es: %d \r\n ", datocompleto);
+
+    						break;
+
+    			case 'y':
+    			case 'Y':
+
+    			i2c0MasterReadByte(&MSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_Y_MSB);
+
+    			i2c0MasterReadByte(&LSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_Y_LSB);
+
+    				datocompleto=(MSB<<6)|(LSB>>2);
+
+					printf("el dato MSB de X es: %d \r\n ", MSB);
+					printf("el dato LSB de X es: %d \r\n ", LSB);
     			    printf("el dato es: %d \r\n ", datocompleto);
 
     						break;
