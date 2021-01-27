@@ -28,6 +28,10 @@
 
 #define MMA8451_WHO_AM_I_MEMORY_ADDRESS		0x0D
 
+#define MMA8451_OUT_X_MSB   0x01
+#define MMA8451_OUT_X_LSB  0x02
+
+
 /*******************************************************************************
  * Private Prototypes
  ******************************************************************************/
@@ -54,7 +58,10 @@
 int main(void) {
 	status_t status;
 	uint8_t nuevo_byte_uart;
-	uint8_t	nuevo_dato_i2c;
+	uint16_t nuevo_dato_i2c;
+	uint16_t XMSB;
+    uint16_t XLSB;
+    uint16_t datocompleto;
 
   	/* Init board hardware. */
     BOARD_InitBootPins();
@@ -103,12 +110,24 @@ int main(void) {
 				case 'M':
 					i2c0MasterReadByte(&nuevo_dato_i2c, MMA851_I2C_DEVICE_ADDRESS, MMA8451_WHO_AM_I_MEMORY_ADDRESS);
 
-					if(nuevo_dato_i2c==0x1A)
+					if(nuevo_dato_i2c==0x1A);
 						printf("MMA8451 encontrado!!\r\n");
-					else
-						printf("MMA8451 error\r\n");
 
 					break;
+
+    			case 'x':
+    			case 'X':
+    			i2c0MasterReadByte(&XMSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_MSB);
+
+    			i2c0MasterReadByte(&XLSB, MMA851_I2C_DEVICE_ADDRESS,MMA8451_OUT_X_LSB);
+
+    				datocompleto=(XMSB<<6)|(XLSB>>2);
+
+					printf("el dato MSB de X es: %d \r\n ", XMSB);
+					printf("el dato LSB de X es: %d \r\n ", XLSB);
+    			    printf("el dato es: %d \r\n ", datocompleto);
+
+    						break;
 				}
     		}else{
     			printf("error\r\n");
@@ -118,3 +137,4 @@ int main(void) {
 
     return 0 ;
 }
+
