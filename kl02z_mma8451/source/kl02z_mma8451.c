@@ -85,6 +85,9 @@ int main(void) {
     PRINTF("v-V led VERDE\r\n");
     PRINTF("a-A led AZUL\r\n");
     PRINTF("M buscar acelerometro\r\n");
+    PRINTF("x-X registro salida de X (MSB|LSB)\r\n");
+    PRINTF("y-Y Registro salida de Y (MSB|LSB)\r\n");
+    PRINTF("z-Z Registro salida de Z (MSB|LSB)\r\n");
 
 
     while(1) {
